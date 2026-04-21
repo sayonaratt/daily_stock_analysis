@@ -14,9 +14,10 @@ def get_latest_trade_data():
     # 往前找最多5天，直到拿到数据
     for i in range(5):
         try:
+            # 关键修复：fields 里加上 turnover_rate
             df = pro.daily(
                 trade_date=trade_date,
-                fields="ts_code,symbol,name,turnover_rate,close"
+                fields="ts_code,symbol,name,turnover_rate"
             )
             if not df.empty:
                 print(f"✅ 成功获取到【{trade_date}】的行情数据，共 {len(df)} 只股票")
