@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 
 # 把这里换成你自己的 tushare token
-ts.set_token("72e9dd8b12ea82becd9b67bc307d0e9db7248068bf47cd6ec0c89fb3")
+ts.set_token("d76b529ceb9f76e240f499208f1c7ad1e9c86148b2e9086c53cadee2")
 pro = ts.pro_api()
 
 # 获取今天日期
