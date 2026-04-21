@@ -1,0 +1,27 @@
+name: 每日A股自动选股
+
+on:
+  schedule:
+    - cron: "10 9 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 安装Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: 安装库
+        run: pip install tushare pandas
+      - name: 运行选股
+        run: python stock.py
+      - name: 保存结果
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add 今日选股结果.csv
+          git commit -m "更新 $(date +%Y-%m-%d) 选股"
+          git push
