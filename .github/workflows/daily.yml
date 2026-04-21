@@ -1,33 +1,19 @@
-name: Daily Stock Filter
-
+name: 每日A股选股
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 10 * * 1-5"
+    - cron: "30 9 * * 1-5"
 
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: true
-
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
-
+          python-version: "3.11"
       - name: Install dependencies
         run: pip install tushare pandas
-
       - name: Run script
         run: python stock.py
-
-      - name: Upload result
-        uses: actions/upload-artifact@v4
-        with:
-          name: stock-result
-          path: 今日选股结果.csv
