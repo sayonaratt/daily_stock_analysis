@@ -1,9 +1,9 @@
-name: 每日A股自动选股
+name: Daily Stock Filter
 
 on:
-  schedule:
-    - cron: "30 9 * * 1-5"
   workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * 1-5"
 
 jobs:
   run:
@@ -11,22 +11,23 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.10"
 
       - name: Install dependencies
-        run: pip install tushare pandas --quiet
+        run: pip install tushare pandas
 
-      - name: Run stock filter script
+      - name: Run script
         run: python stock.py
 
-      - name: Commit and push results
-        run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git add 今日选股结果.csv
-          git commit -m "更新 $(date +%Y-%m-%d) 选股结果" || echo "无文件更新，跳过提交"
-          git push
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: stock-result
+          path: 今日选股结果.csv
