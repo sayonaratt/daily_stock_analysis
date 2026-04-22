@@ -1,19 +1,33 @@
-name: 每日A股选股
+name: Daily Stock Analysis
+
 on:
   workflow_dispatch:
   schedule:
-    - cron: "30 9 * * 1-5"
+    - cron: "0 19 * * *"  # 每天晚上7点自动运行
 
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
       - name: Install dependencies
-        run: pip install tushare pandas
+        run: |
+          python -m pip install --upgrade pip
+          pip install tushare pandas
+
       - name: Run script
         run: python stock.py
+
+      # 👇 新增这一段，把结果文件上传为可下载的文件
+      - name: Upload result CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: high_volume_stocks_result
+          path: "high_volume_stocks_*.csv"
+          retention-days: 7  # 文件保存7天
